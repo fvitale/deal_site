@@ -5,11 +5,13 @@ class DealTest < ActiveSupport::TestCase
     assert FactoryGirl.build(:deal).valid?
   end
 
-  # I think this is a bad test and it fails sometimes
-  test "over should honor current time" do
-  	deal = FactoryGirl.create(:deal, :end_at => Time.zone.now + 0.01)
-  	assert !deal.over?, "Deal should not be over"
-  	sleep 1
-  	assert deal.over?, "Deal should be over"
+  test "deal that ends in the future should not be over yet" do
+    deal = FactoryGirl.create(:deal, :end_at => Time.zone.now + 10)
+    assert !deal.over?, "Deal should not be over"
+  end
+
+  test "deal that ended in the past should be over now" do
+    deal = FactoryGirl.create(:deal, :end_at => Time.zone.now - 10)
+    assert deal.over?, "Deal should be over"
   end
 end
