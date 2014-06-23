@@ -1,0 +1,20 @@
+1.Performance fix
+
+The Deal.all approach turns inappropriate as the queried table becomes bigger, since it will fetch the whole table at one time, and create every models in memory. So the problem is solved by rails with the batch process that will execute the associated block for each batch returned. This is what the find_in_batches method does, and what I have decided to do to provide a performance improvement.
+Some other alternatives that rails provides to improve this kind on issues are the various caching techniques, for example page cache or sql cache; as well as the lazy loading that can reduce the queries so they are only performed only when data from the database is required.
+
+2.DRY themes
+
+Since all the views were shared for every Entertainment pages, I decided to use the same .css and .html.erb file for them, using a simple var to show the city name in the expected places. For the wcax views, the files remained unchanged since it was a pretty different view.
+The deals.css file was created in the assests/stylesheets directory (removed the .erb since it was plain css code there), and it contains the same styles that were repeated over and over in every theme directory.
+
+3.DealTest fix
+
+I believe that using sleep to decide in a test case if an assert is true or not becomes unpredictable, so it was removed. Additionally, the test case was split into two, in order to have only one assertion on each.
+
+4.Deal import rake task
+
+Example of use
+$ rake db:import["script/data/daily_planet_export.txt",2]
+It uses a couple of regex to split the data, ignoring first line of the file passed trough param in the  array args[0] position.
+Uses args[1] as the advertiser_id needed, and avoids the save action if there is missing info in some line, for example if a needed field is not present.
