@@ -1,6 +1,5 @@
 class DealsController < ApplicationController
   before_filter :assign_deal, only: [ :show, :edit, :update, :destroy ]
-  before_filter :set_view_paths, only: :show
 
   def index
     @deals = []
@@ -10,6 +9,7 @@ class DealsController < ApplicationController
   end
 
   def show
+    set_view_paths unless @deal.advertiser.publisher.theme =~ /entertainment(.*)/
     respond_to do |format|
       format.html { render layout: "deals/show" }
       format.json { render json: @deal }
